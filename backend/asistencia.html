@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrar asistencia</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+  <h1>Registrar asistencia</h1>
+  <video id="video" width="100%" autoplay></video>
+  <br><br>
+  <button onclick="capturar()">Registrar</button>
+  <br><br>
+  <a href="/">← Volver al menú</a>
+
+  <script>
+    const video = document.getElementById('video');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("No se pudo acceder a la cámara: " + err);
+      });
+
+    function capturar() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      const imagen = canvas.toDataURL('image/jpeg');
+
+      fetch('/api/reconocer_asistencia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imagen })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.mensaje))
+      .catch(err => alert("Error en el registro: " + err));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0f0f0f; /* negro profundo */
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #ffffff;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Encabezado principal */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #1db954; /* verde tipo Spotify */
+}
+
+/* Estilo de botones y enlaces principales */
+.menu a,
+button {
+  display: inline-block;
+  margin: 0.8rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  text-decoration: none;
+  background: #1a73e8; /* azul vivo */
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.menu a:hover,
+button:hover {
+  background: #2979ff;
+  transform: scale(1.05);
+}
+
+/* Formularios */
+input[type="text"],
+input[type="file"],
+select {
+  width: 80%;
+  max-width: 400px;
+  padding: 0.8rem;
+  margin: 0.8rem auto;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid #1a73e8;
+  border-radius: 10px;
+  outline: none;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+form {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
+  margin: auto;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Tablas */
+table {
+  width: 90%;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+th, td {
+  padding: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+th {
+  background-color: #1a1a1a;
+  color: #1db954;
+  font-weight: bold;
+}
+
+td {
+  color: #ccc;
+}
+
+tr:hover {
+  background-color: #1e1e1e;
+}
+
+/* Enlace de volver */
+a[href="/"] {
+  color: #1db954;
+  font-size: 1rem;
+  display: block;
+  margin-top: 2rem;
+}
+
+video {
+  border-radius: 12px;
+  max-width: 90%;
+  margin-top: 1rem;
+  box-shadow: 0 0 20px rgba(0, 128, 255, 0.4);
+}
+
+/* Detalles individuales (opcional para vista de detalle estudiante) */
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  margin: 2rem auto;
+  width: 80%;
+  max-width: 600px;
+}

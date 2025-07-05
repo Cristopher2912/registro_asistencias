@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ver registro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Registro de asistencias</h1>
+
+  <!-- Tabla de resumen -->
+  <table id="tabla-resumen">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Asistencias</th>
+        <th>Faltas</th>
+        <th>Detalle</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Detalle de asistencias (oculto al inicio) -->
+  <div id="detalle" style="display:none;">
+    <h2>Detalle de asistencias: <span id="nombre-detalle"></span></h2>
+    <table id="tabla-detalle">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <br>
+    <button onclick="cerrarDetalle()">← Volver al resumen</button>
+  </div>
+
+  <br>
+  <a href="/">← Volver al menú</a>
+
+  <script>
+    // Cargar resumen general
+    function cargarResumen() {
+      fetch('/api/resumen')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#tabla-resumen tbody');
+          tbody.innerHTML = '';
+          data.resumen.forEach(est => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${est.nombre}</td>
+              <td>${est.total_asistencias}</td>
+              <td>${est.total_faltas}</td>
+              <td><button onclick="cargarDetalle(${est.estudiante_id})">Ver</button></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    // Cargar detalle por estudiante
+    function cargarDetalle(id) {
+      fetch(`/api/detalle_asistencia/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('nombre-detalle').textContent = data.nombre;
+          const tbody = document.querySelector('#tabla-detalle tbody');
+          tbody.innerHTML = '';
+          data.registros.forEach(reg => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${reg.fecha}</td>
+              <td>${reg.hora}</td>
+              <td>${reg.presente == 1 ? 'Presente' : 'Ausente'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          // Mostrar detalle y ocultar resumen
+          document.getElementById('detalle').style.display = 'block';
+          document.getElementById('tabla-resumen').style.display = 'none';
+        });
+    }
+
+    // Cerrar detalle y volver al resumen
+    function cerrarDetalle() {
+      document.getElementById('detalle').style.display = 'none';
+      document.getElementById('tabla-resumen').style.display = 'table';
+    }
+
+    // Al cargar la página
+    window.onload = cargarResumen;
+  </script>
+</body>
+</html>

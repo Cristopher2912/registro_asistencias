@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrar asistencia</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Registrar asistencia</h1>
+
+  <video id="video" width="100%" autoplay></video>
+
+  <div id="mensaje" style="margin-top: 20px; font-size: 1.2rem; color: white;"></div>
+
+  <br><br>
+  <a href="/">← Volver al menú</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const video = document.getElementById('video');
+      const mensajeDiv = document.getElementById('mensaje');
+
+      if (!video) {
+        mensajeDiv.innerText = "No se encontró el elemento de video";
+        mensajeDiv.style.color = "red";
+        return;
+      }
+
+      // Activar la cámara
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+
+          // Capturar automáticamente cada 1.5s
+          setInterval(capturarYReconocer, 1500);
+        })
+        .catch(err => {
+          mensajeDiv.innerText = "No se pudo acceder a la cámara: " + err;
+          mensajeDiv.style.color = "red";
+        });
+
+      function capturarYReconocer() {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        const imagen = canvas.toDataURL('image/jpeg');
+
+        fetch('/api/reconocer_asistencia', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imagen })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.mensaje) {
+            mostrarNotificacion(data.mensaje, data.repetido);
+          }
+        })
+        .catch(err => {
+          mensajeDiv.innerText = "Error al registrar: " + err;
+          mensajeDiv.style.color = "red";
+        });
+      }
+
+      function mostrarNotificacion(texto, repetido) {
+        const noti = document.createElement('div');
+        noti.innerText = texto;
+        noti.style.position = 'fixed';
+        noti.style.top = '10%';
+        noti.style.left = '50%';
+        noti.style.transform = 'translateX(-50%)';
+        noti.style.background = repetido ? '#f39c12' : '#00c853';
+        noti.style.color = 'white';
+        noti.style.padding = '1rem 2rem';
+        noti.style.borderRadius = '12px';
+        noti.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+        noti.style.zIndex = 9999;
+        document.body.appendChild(noti);
+        setTimeout(() => {
+          document.body.removeChild(noti);
+        }, 3000);
+      }
+    });
+  </script>
+  <script>
+  window.addEventListener('beforeunload', function (event) {
+    // Llamar a la API para registrar faltas
+    navigator.sendBeacon('/api/registrar_faltas');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Estudiantes inscritos</title>
+<style>
+  table { border-collapse: collapse; width: 90%; margin: 1rem auto; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+  input[type="text"], select { width: 90%; }
+  button { margin: 2px; }
+</style>
+</head>
+<body>
+<h1>Estudiantes inscritos</h1>
+
+<table id="tabla-estudiantes">
+  <thead>
+    <tr>
+      <th>Foto</th>
+      <th>Nombre</th>
+      <th>Materia</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<a href="/">← Volver al menú</a>
+
+<script>
+async function cargarEstudiantes() {
+  const res = await fetch('/api/estudiantes');
+  const data = await res.json();
+  const tbody = document.querySelector('#tabla-estudiantes tbody');
+  tbody.innerHTML = '';
+  data.estudiantes.forEach(est => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><img src="/static/fotos/${est.foto}" alt="Foto"></td>
+      <td contenteditable="true" data-id="${est.id}" data-campo="nombre">${est.nombre}</td>
+      <td>
+        <select data-id="${est.id}" data-campo="materia">
+          <option value="Infraestructura I" ${est.materia === "Infraestructura I" ? "selected" : ""}>Infraestructura I</option>
+          <option value="Infraestructura II" ${est.materia === "Infraestructura II" ? "selected" : ""}>Infraestructura II</option>
+        </select>
+      </td>
+      <td>
+        <button onclick="guardarCambios(${est.id})">Guardar</button>
+        <button onclick="eliminarEstudiante(${est.id})">Eliminar</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function guardarCambios(id) {
+  const fila = [...document.querySelectorAll(`[data-id="${id}"]`)];
+  const nombre = fila.find(el => el.dataset.campo === "nombre").innerText.trim();
+  const materia = fila.find(el => el.dataset.campo === "materia").value;
+
+  if (!nombre) {
+    alert("El nombre no puede estar vacío");
+    return;
+  }
+
+  const res = await fetch(`/api/estudiantes/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, materia })
+  });
+  const data = await res.json();
+  alert(data.mensaje);
+  cargarEstudiantes();
+}
+
+async function eliminarEstudiante(id) {
+  if (!confirm("¿Seguro que quieres eliminar este estudiante?")) return;
+  const res = await fetch(`/api/estudiantes/${id}`, { method: 'DELETE' });
+  const data = await res.json();
+  alert(data.mensaje);
+  cargarEstudiantes();
+}
+
+window.onload = cargarEstudiantes;
+</script>
+
+</body>
+</html>

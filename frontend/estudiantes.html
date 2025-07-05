@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estudiantes Inscritos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Estudiantes inscritos</h1>
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Materia</th>
+        <th>Editar</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <br>
+  <a href="/">← Volver al menú</a>
+
+  <script>
+    const tbody = document.querySelector('#tabla tbody');
+
+    function cargarEstudiantes() {
+      fetch('/api/estudiantes')
+        .then(res => res.json())
+        .then(data => {
+          tbody.innerHTML = "";
+          data.estudiantes.forEach(est => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><input type="text" value="${est.nombre}" data-id="${est.id}" class="nombre-input"></td>
+              <td>
+                <select class="materia-input" data-id="${est.id}">
+                  <option value="Infraestructura I" ${est.materia === 'Infraestructura I' ? 'selected' : ''}>Infraestructura I</option>
+                  <option value="Infraestructura II" ${est.materia === 'Infraestructura II' ? 'selected' : ''}>Infraestructura II</option>
+                </select>
+              </td>
+              <td><button onclick="guardar(${est.id})">Guardar</button></td>
+              <td><button onclick="eliminar(${est.id})">Eliminar</button></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function guardar(id) {
+      const nombre = document.querySelector(`.nombre-input[data-id='${id}']`).value;
+      const materia = document.querySelector(`.materia-input[data-id='${id}']`).value;
+
+      fetch(`/api/estudiantes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, materia })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.mensaje));
+    }
+
+    function eliminar(id) {
+      if (!confirm("¿Eliminar estudiante?")) return;
+      fetch(`/api/estudiantes/${id}`, {
+        method: 'DELETE'
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.mensaje);
+        cargarEstudiantes();
+      });
+    }
+
+    cargarEstudiantes();
+  </script>
+</body>
+</html>
