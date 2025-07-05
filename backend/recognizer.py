@@ -73,7 +73,7 @@ def reconocer_estudiante(base64_img):
         puntuacion = np.mean(diferencia)
         print(f"Comparación con {nombre}: puntuación de diferencia = {puntuacion}")
 
-        if puntuacion < 30:  # Ajusta umbral según necesites
+        if puntuacion < 40:  # Ajusta umbral según necesites
             print(f"Rostro reconocido: {nombre} con puntuación {puntuacion}")
             return est_id, nombre
 
