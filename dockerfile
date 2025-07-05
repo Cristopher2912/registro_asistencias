@@ -1,23 +1,30 @@
-# Usa una imagen oficial de Python slim
+# Usa una imagen oficial ligera con Python
 FROM python:3.10-slim
 
-# Instala librerías nativas necesarias para OpenCV (libgl y libglib)
-RUN apt-get update && \
-    apt-get install -y libgl1 libglib2.0-0 && \
-    rm -rf /var/lib/apt/lists/*
+# Instala dependencias del sistema necesarias para OpenCV
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos del proyecto al contenedor
+# Copia los archivos del proyecto
 COPY . /app
 
-# Actualiza pip e instala las dependencias del proyecto
+# Actualiza pip e instala dependencias de Python
 RUN pip install --upgrade pip
+
+# Instala opencv-contrib-python para tener cv2.face y demás paquetes
+RUN pip install opencv-contrib-python==4.7.0.72
+
+# Instala las demás dependencias de tu proyecto si tienes requirements.txt
+# Si tienes, usa esta línea:
 RUN pip install -r requirements.txt
 
-# Expone el puerto para la aplicación Flask (ajusta si usas otro puerto)
+# Exponer puerto (ajusta según tu app)
 EXPOSE 5000
 
-# Comando para ejecutar la aplicación
+# Comando para iniciar la app
 CMD ["python", "backend/app.py"]
