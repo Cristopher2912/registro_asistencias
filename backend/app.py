@@ -144,6 +144,13 @@ def api_estudiantes():
         })
     return jsonify({"estudiantes": lista})
 
+@app.route('/api/entrenar_modelo', methods=['POST'])
+def api_entrenar_modelo():
+    from recognizer import entrenar_reconocedor
+    exito = entrenar_reconocedor()
+    return jsonify({"mensaje": "Modelo entrenado correctamente" if exito else "Falló el entrenamiento"})
+
+
 
 @app.route('/api/registrar_faltas', methods=['POST'])
 def api_registrar_faltas():

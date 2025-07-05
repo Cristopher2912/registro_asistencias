@@ -100,29 +100,27 @@ def detalle_asistencia(estudiante_id):
     }
 
 def registrar_faltas_automaticas():
-    import sqlite3
-    from datetime import datetime
-
     conn = sqlite3.connect("base_datos.db")
     c = conn.cursor()
 
     hoy = datetime.now().strftime('%Y-%m-%d')
 
-    c.execute("SELECT id FROM estudiantes")
-    todos = set(r[0] for r in c.fetchall())
+    # Estudiantes que no tienen asistencia registrada hoy
+    c.execute("""
+        SELECT id FROM estudiantes
+        WHERE id NOT IN (
+            SELECT estudiante_id FROM asistencias
+            WHERE fecha = ? AND presente = 1
+        )
+    """, (hoy,))
+    
+    ausentes = c.fetchall()
 
-    c.execute("SELECT estudiante_id FROM asistencias WHERE fecha = ? AND presente = 1", (hoy,))
-    asistieron = set(r[0] for r in c.fetchall())
-
-    faltaron = todos - asistieron
-
-    for est_id in faltaron:
-        hora_actual = datetime.now().strftime('%H:%M:%S')
+    for (id_est,) in ausentes:
         c.execute("INSERT INTO asistencias (estudiante_id, fecha, hora, presente) VALUES (?, ?, ?, ?)",
-                  (est_id, hoy, hora_actual, 0))
-
+                  (id_est, hoy, datetime.now().strftime('%H:%M:%S'), 0))
+    
     conn.commit()
     conn.close()
 
-
-    return len(ausentes)
+    return len(ausentes)  # ✅ ahora sí está definida

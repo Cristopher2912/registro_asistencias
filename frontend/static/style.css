@@ -5,22 +5,26 @@
   box-sizing: border-box;
 }
 
+/* Base del sitio */
 body {
-  background: #0f0f0f; /* negro profundo */
+  background: #0a0a0a;
   font-family: 'Segoe UI', Roboto, sans-serif;
-  color: #ffffff;
+  color: #e0e0e0;
   padding: 2rem;
   text-align: center;
 }
 
-/* Encabezado principal */
+/* Títulos */
+h1, h2, h3, h4, h5, h6 {
+  color: #3ea6ff;
+}
+
 h1 {
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: #1db954; /* verde tipo Spotify */
 }
 
-/* Estilo de botones y enlaces principales */
+/* Botones y enlaces principales */
 .menu a,
 button {
   display: inline-block;
@@ -28,8 +32,8 @@ button {
   padding: 1rem 2rem;
   font-size: 1.1rem;
   text-decoration: none;
-  background: #1a73e8; /* azul vivo */
-  color: #fff;
+  background: linear-gradient(135deg, #2196f3, #3ea6ff);
+  color: white;
   border: none;
   border-radius: 12px;
   transition: all 0.3s ease;
@@ -38,77 +42,81 @@ button {
 
 .menu a:hover,
 button:hover {
-  background: #2979ff;
+  background: linear-gradient(135deg, #2979ff, #4fc3f7);
   transform: scale(1.05);
 }
 
 /* Formularios */
+form {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  margin: auto;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 255, 0.1);
+}
+
 input[type="text"],
 input[type="file"],
 select {
   width: 80%;
   max-width: 400px;
   padding: 0.8rem;
-  margin: 0.8rem auto;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  border: 1px solid #1a73e8;
+  margin: 1rem auto;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border: 1px solid #3ea6ff;
   border-radius: 10px;
   outline: none;
+  font-size: 1rem;
 }
 
-input::placeholder {
+input::placeholder,
+select option {
   color: #aaa;
 }
 
-form {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 2rem;
-  margin: auto;
-  width: 90%;
-  max-width: 500px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20fill%3D%22%23ffffff%22%20height%3D%2224%22%20width%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
 }
 
 /* Tablas */
 table {
-  width: 90%;
+  width: 95%;
   margin: 2rem auto;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.1);
 }
 
 th, td {
   padding: 1rem;
   border-bottom: 1px solid #333;
+  text-align: center;
 }
 
 th {
-  background-color: #1a1a1a;
-  color: #1db954;
+  background-color: #111;
+  color: #3ea6ff;
   font-weight: bold;
 }
 
 td {
-  color: #ccc;
+  color: #e0e0e0;
 }
 
 tr:hover {
-  background-color: #1e1e1e;
+  background-color: #1a1a1a;
 }
 
-/* Enlace de volver */
-a[href="/"] {
-  color: #1db954;
-  font-size: 1rem;
-  display: block;
-  margin-top: 2rem;
-}
-
+/* Video estilo cámara */
 video {
   border-radius: 12px;
   max-width: 90%;
@@ -116,7 +124,7 @@ video {
   box-shadow: 0 0 20px rgba(0, 128, 255, 0.4);
 }
 
-/* Detalles individuales (opcional para vista de detalle estudiante) */
+/* Cards para detalles individuales */
 .card {
   background: rgba(255, 255, 255, 0.03);
   padding: 1.5rem;
@@ -125,4 +133,37 @@ video {
   margin: 2rem auto;
   width: 80%;
   max-width: 600px;
+  color: #e0e0e0;
+  border: 1px solid rgba(62, 166, 255, 0.3);
+}
+
+/* Enlace de volver y enlaces en general */
+a[href="/"] {
+  color: #3ea6ff;
+  font-size: 1rem;
+  display: block;
+  margin-top: 2rem;
+  text-decoration: none;
+}
+
+a[href="/"]:hover,
+a:hover {
+  text-decoration: underline;
+  color: #4fc3f7;
+}
+
+/* Corrección de color verde residual */
+*, *::before, *::after {
+  color: inherit;
+}
+
+/* Texto general */
+body, p, span, label {
+  color: #e0e0e0;
+}
+
+/* Mensajes de éxito o información */
+.success {
+  color: #3ea6ff;
+  font-weight: bold;
 }
