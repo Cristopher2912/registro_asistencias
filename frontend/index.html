@@ -5,15 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registro de asistencias</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 <body>
   <h1>Registro de asistencias</h1>
+
+  <!-- Subtítulo y logo -->
+  <div style="margin-bottom: 2rem;">
+    <img src="{{ url_for('static', filename='img/logo_uce.png') }}" alt="Logo UCE" style="max-width: 120px; margin-bottom: 1rem;">
+    <h2 style="color: #3ea6ff; font-weight: 500;">Universidad Central del Ecuador</h2>
+    <h3 style="color: #e0e0e0; font-weight: 400;">Laboratorio de Redes</h3>
+  </div>
+
+  <!-- Menú principal -->
   <div class="menu">
-  <a href="/ingresar">Ingresar estudiantes</a>
-  <a href="/asistencia">Registrar asistencia</a>
-  <a href="/registro">Ver registro</a>
-  <a href="/estudiantes">Estudiantes inscritos</a>  <!-- nuevo -->
-</div>
+    <a href="/ingresar">Ingresar estudiantes</a>
+    <a href="/asistencia">Registrar asistencia</a>
+    <a href="/registro">Ver registro</a>
+    <a href="/estudiantes">Estudiantes inscritos</a>
+  </div>
 </body>
 </html>
