@@ -7,7 +7,6 @@ from PIL import Image
 from db import obtener_estudiantes
 import pickle
 
-# Inicializar detector y reconocedor LBPH
 detector = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 
@@ -34,7 +33,7 @@ def extraer_rostro(img_bgr, required_size=(100, 100)):
     rostro = gris[y:y+h, x:x+w]
     try:
         rostro = cv2.resize(rostro, required_size)
-        rostro = cv2.equalizeHist(rostro)  # mejora contraste
+        rostro = cv2.equalizeHist(rostro)  
         return rostro
     except:
         return None
@@ -44,13 +43,11 @@ def generar_variaciones(rostro):
     variaciones.append(rostro)
     rows, cols = rostro.shape
 
-    # Rotaciones pequeñas
     for angle in [-10, -5, 5, 10]:
         M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
         rotada = cv2.warpAffine(rostro, M, (cols, rows))
         variaciones.append(rotada)
 
-    # Brillo bajo y alto
     for beta in [-30, 30]:
         brillo = cv2.convertScaleAbs(rostro, alpha=1, beta=beta)
         variaciones.append(brillo)
@@ -100,7 +97,7 @@ def entrenar_reconocedor():
     print("Modelo entrenado y guardado.")
     return True
 
-# Cargar modelo si existe
+
 if os.path.exists(modelo_path) and os.path.exists(labelmap_path):
     recognizer.read(modelo_path)
     with open(labelmap_path, "rb") as f:
@@ -124,7 +121,7 @@ def reconocer_estudiante(base64_img):
     try:
         label_predicho, confianza = recognizer.predict(rostro)
         print(f"Predicción: Label {label_predicho}, Confianza {confianza}")
-        UMBRAL = 130  # Umbral más flexible pero seguro
+        UMBRAL = 130  
         if confianza < UMBRAL:
             est_id = label_to_id_map.get(label_predicho)
             if est_id:
